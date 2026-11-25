@@ -18,11 +18,13 @@
 
 
 
-import { CreateProductInput } from "../types/product.types";
+import { CreateProductInput, Product } from "../types/product.types";
 import * as productRepository from "../repositories/product.repository";
 
 export async function createProduct(data: CreateProductInput) {
-
     return await productRepository.createProduct(data);
+}
 
+export async function getProductService():Promise<Product[]> {
+    return await productRepository.getProductRepo()
 }

@@ -1,5 +1,6 @@
+import { promises } from "node:dns";
 import pool from "../../config/db";
-import { CreateProductInput } from "../types/product.types";
+import { CreateProductInput, Product } from "../types/product.types";
 
 export async function createProduct(data: CreateProductInput) {
 
@@ -11,4 +12,11 @@ export async function createProduct(data: CreateProductInput) {
     );
 
     return result.rows[0];
+}
+
+export async function getProductRepo(): Promise<Product[]> {
+    const result = await pool.query<Product>(
+        `SELECT * FROM products`
+    );
+    return result.rows
 }

@@ -56,10 +56,6 @@ export function isValidStock(value: unknown): boolean {
 }
 
 
-
-
-
-
 import { Request, Response, NextFunction } from "express";
 export function validateCreateProduct(
     req: Request,
