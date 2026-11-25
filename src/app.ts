@@ -2,6 +2,7 @@ import express from "express";
 const app = express();
 import pool from './config/db'
 import productRouter from "./product/routes/product.routes";
+import userRouter from "./users/routes/user.routes";
 // Middleware
 app.use(express.json());
 
@@ -32,5 +33,6 @@ app.get('/api', (req, res) => {
 
 // routes
 app.use('/api/product', productRouter)
+app.use("/api/users", userRouter);
 
 export default app
