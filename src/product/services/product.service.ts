@@ -18,7 +18,7 @@
 
 
 
-import { CreateProductInput, Product } from "../types/product.types";
+import { CreateProductInput, Product, UpdateProductInput } from "../types/product.types";
 import * as productRepository from "../repositories/product.repository";
 
 export async function createProduct(data: CreateProductInput) {
@@ -27,4 +27,21 @@ export async function createProduct(data: CreateProductInput) {
 
 export async function getProductService():Promise<Product[]> {
     return await productRepository.getProductRepo()
+}
+
+
+export async function getSingleProductService(id: string | null):Promise<Product | null> {
+    return await productRepository.getSingleProductRepo(id)
+}
+
+export async function delSingleProductService(id: string | null):Promise<number | null> {
+    return await productRepository.deleteSingleProductRepo(id)
+}
+
+export async function patchProductService(id: string | null, data: UpdateProductInput):Promise<Product | undefined> {
+    return await productRepository.patchProductRepo(id, data)
+}
+
+export async function putProductService(id: string | null, data: CreateProductInput):Promise<Product | undefined> {
+    return await productRepository.putProductRepo(id, data)
 }

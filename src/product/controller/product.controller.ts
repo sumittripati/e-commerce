@@ -39,23 +39,8 @@
 
 import { Request, Response } from "express"
 import * as productService from "../services/product.service";
-
-const createProductController = async (req: Request, res: Response)=>{
-    try {
-        const data = req.body;
-        console.log("Controller data:");
-        const product = await productService.createProduct(data);
-
-        return res.status(201).json({success: true, message: "product created successfully", data: product});
-    }
-    catch (error) {
-        console.log("error in creating product", error)
-        return res.status(500).json({
-            success: false,
-            message: "error in creating product"
-        })
-    }
-}
+import {parseId} from '../validation/validation'
+import strict from "node:assert/strict";
 
 const getProductController = async (req: Request, res: Response)=>{
     try {
@@ -73,4 +58,124 @@ const getProductController = async (req: Request, res: Response)=>{
     }
 }
 
-export { createProductController, getProductController };
+const getSingleProductController = async (req: Request, res: Response)=>{
+    try {
+        const id: string | null = parseId(req.params.id);
+        
+        const product = await productService.getSingleProductService(id);
+
+        return res.status(201).json({success: true, message: "product created successfully", data: product});
+    }
+    catch (error) {
+        console.log("error in getting product", error)
+        return res.status(500).json({
+            success: false,
+            message: "error in getting product"
+        })
+    }
+}
+
+const createProductController = async (req: Request, res: Response)=>{
+    try {
+        const data = req.body;
+        const product = await productService.createProduct(data);
+
+        return res.status(201).json({success: true, message: "product created successfully", data: product});
+    }
+    catch (error) {
+        console.log("error in creating product", error)
+        return res.status(500).json({
+            success: false,
+            message: "error in creating product"
+        })
+    }
+}
+
+const patchProductController = async(req: Request, res: Response)=>{
+      try {
+        const id: string | null = parseId(req.params.id);
+        const data = req.body;
+        const product = await productService.patchProductService(id, data);
+
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Product updated successfully",
+            data: product
+        });
+
+      } catch (error) {
+        console.log("error in patching of product", error)
+        return res.status(500).json({
+            success: false,
+            message: "error in patching of product"
+        })
+      }
+}
+
+const putProductController = async(req: Request, res: Response)=>{
+      try {
+        const id: string | null = parseId(req.params.id);
+        const data = req.body;
+        const product = await productService.putProductService(id, data);
+
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Product updated successfully",
+            data: product
+        });
+
+      } catch (error) {
+        console.log("error in putching of product", error)
+        return res.status(500).json({
+            success: false,
+            message: "error in putching of product"
+        })
+      }
+}
+
+const DeleteProductController = async(req: Request, res: Response)=>{
+      try {
+        const id: string | null = parseId(req.params.id);
+        const deleted = await productService.delSingleProductService(id);
+        if (!id) {
+            return res.status(400).json({
+            message: "Invalid product ID",
+        }); 
+        }
+
+        if (!deleted) {
+            return res.status(404).json({
+            message: "Product not found",
+            });
+        }
+
+        return res.status(204).json({
+            success: true,
+            message: `product ${deleted} is deleted successfullt`
+        });
+
+
+      } catch (error) {
+        console.log("error in deleting product", error)
+        return res.status(500).json({
+            success: false,
+            message: "error in deleting product"
+        })
+      }
+}
+
+export { createProductController, getProductController,  getSingleProductController, DeleteProductController, patchProductController};

@@ -1,6 +1,6 @@
 import { promises } from "node:dns";
 import pool from "../../config/db";
-import { CreateProductInput, Product } from "../types/product.types";
+import { CreateProductInput, Product, UpdateProductInput } from "../types/product.types";
 
 export async function createProduct(data: CreateProductInput) {
 
@@ -19,4 +19,52 @@ export async function getProductRepo(): Promise<Product[]> {
         `SELECT * FROM products`
     );
     return result.rows
+}
+
+export async function getSingleProductRepo(id: string | null): Promise<Product | null> {
+    const result = await pool.query<Product>(
+        `SELECT * FROM products WHERE id = $1`,
+        [id]
+    );
+    return result.rows[0] ?? null;
+}
+
+export async function deleteSingleProductRepo(id: string | null): Promise<number | null> {
+    const result = await pool.query<Product>(
+        `DELETE FROM products WHERE id = $1 RETURNING id`,
+        [id]
+    );
+    console.log("del res", result.rowCount)
+    return result.rowCount;
+}
+
+export async function patchProductRepo(id: string | null, data: UpdateProductInput): Promise<Product | undefined> {
+    const result = await pool.query<Product>(
+      `UPDATE products
+       SET
+         name = COALESCE($1, name),
+         price = COALESCE($2, price),
+         stock = COALESCE($3, stock)
+       WHERE id = $4
+       RETURNING id, name, price, stock, created_at`,
+      [data.name, data.price, data.stock, id]
+    );
+    
+    return result.rows[0];
+}
+
+export async function putProductRepo(id: string | null, data: CreateProductInput): Promise<Product | undefined> {
+
+    const result = await pool.query<Product>(
+        `UPDATE products
+         SET name = $1, 
+         price = $2, 
+         stock = $3
+         WHERE id = $4
+         RETURNING *`,
+
+        [data.name, data.price, data.stock, id]
+    );
+
+    return result.rows[0];
 }
