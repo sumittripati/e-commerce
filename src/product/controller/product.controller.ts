@@ -37,12 +37,12 @@
 
 
 
-import { Request, Response } from "express"
+import { Request, Response, NextFunction } from "express"
 import * as productService from "../services/product.service";
 import {parseId} from '../validation/validation'
 import strict from "node:assert/strict";
 
-const getProductController = async (req: Request, res: Response)=>{
+const getProductController = async (req: Request, res: Response, next: NextFunction)=>{
     try {
 
         const product = await productService.getProductService();
@@ -51,10 +51,11 @@ const getProductController = async (req: Request, res: Response)=>{
     }
     catch (error) {
         console.log("error in getting product", error)
-        return res.status(500).json({
-            success: false,
-            message: "error in getting product"
-        })
+        // return res.status(500).json({
+        //     success: false,
+        //     message: "error in getting product"
+        // })
+        next(error);
     }
 }
 

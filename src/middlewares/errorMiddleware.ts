@@ -1,18 +1,31 @@
-
 import { Request, Response, NextFunction } from "express";
 
-const errorMiddleware = (err: Error  & { status?: number; statusCode?: number }, req: Request, res: Response, next: NextFunction)=>{
-  const status: number = err.status || err.statusCode || 500;
-  const message: string = err.message || "Something went wrong";
+const errorMiddleware = (
+    err: Error & { status?: number; statusCode?: number },
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
 
-  console.error("ERROR OCCURRED");
-  console.error("Message:", message);
-  console.error("Status:", status);
+    if (res.headersSent) {
+        return next(err);
+    }
 
-  return res.status(status).json({
-    success: false,
-    message: message
-  });
-}
+    const status = err.status || err.statusCode || 500;
+
+    const message =
+        status >= 500
+            ? "Something went wrong"
+            : err.message || "Request failed";
+
+    console.error("ERROR OCCURRED");
+    console.error("Message:", err.message);
+    console.error("Status:", status);
+
+    return res.status(status).json({
+        success: false,
+        message: message
+    });
+};
 
 export default errorMiddleware;
