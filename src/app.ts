@@ -3,7 +3,7 @@ const app = express();
 import pool from './config/db'
 import productRouter from "./product/routes/product.routes";
 import userRouter from "./users/routes/user.routes";
-import orderRouter from './orders/controller/order.controller'
+import orderRouter from './orders/routes/order.routes'
 import notFound from "./middlewares/notFound";
 import errorMiddleware from "./middlewares/errorMiddleware";
 import logger from "./middlewares/logor";
