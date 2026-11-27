@@ -45,3 +45,7 @@ export async function patchProductService(id: string | null, data: UpdateProduct
 export async function putProductService(id: string | null, data: CreateProductInput):Promise<Product | undefined> {
     return await productRepository.putProductRepo(id, data)
 }
+
+export async function searchProductService(minPrice: string, maxPrice: string):Promise<Product[] | undefined> {
+    return await productRepository.searchProductsRepo(minPrice, maxPrice)
+}

@@ -68,3 +68,20 @@ export async function putProductRepo(id: string | null, data: CreateProductInput
 
     return result.rows[0];
 }
+
+export async function searchProductsRepo(
+    minPrice: string,
+    maxPrice: string
+): Promise<Product[]> {
+
+    const result = await pool.query<Product>(
+        `SELECT id, name, price, stock, created_at
+         FROM products
+         WHERE price BETWEEN $1 AND $2
+         ORDER BY price ASC, id ASC
+         LIMIT 50`,
+        [minPrice, maxPrice]
+    );
+
+    return result.rows;
+}

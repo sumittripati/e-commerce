@@ -179,4 +179,49 @@ const DeleteProductController = async(req: Request, res: Response)=>{
       }
 }
 
-export { createProductController, getProductController,  getSingleProductController, DeleteProductController, patchProductController};
+
+export async function searchProductsController(
+    req: Request,
+    res: Response
+) {
+    try {
+        const { minPrice, maxPrice } = req.query;
+
+        if (
+            typeof minPrice !== "string" ||
+            typeof maxPrice !== "string"
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Price range is required"
+            });
+        }
+
+        if (
+            !/^\d{1,10}(\.\d{1,2})?$/.test(minPrice) ||
+            !/^\d{1,10}(\.\d{1,2})?$/.test(maxPrice) ||
+            Number(minPrice) > Number(maxPrice)
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid price range"
+            });
+        }
+
+        const products = await productService.searchProductService(minPrice, maxPrice);
+            
+
+        return res.status(200).json({
+            success: true,
+            data: products
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Failed to search products"
+        });
+    }
+}
+
+export { createProductController, getProductController,  getSingleProductController, DeleteProductController, patchProductController, putProductController};

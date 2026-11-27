@@ -6,7 +6,9 @@
   "main": "index.js",
   "scripts": {
     "start": "tsx src/server.js",
-    "dev": "tsx --watch src/server.js"
+    "dev": "tsx --watch src/server.js",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +22,7 @@
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.6",
     "@types/pg": "^8.23.1",
+    "autocannon": "^9.0.0",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }
